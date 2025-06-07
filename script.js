@@ -75,25 +75,12 @@ function startAIProcessing() {
 
         // Mostra il video rickroll in overlay
         const overlay = document.getElementById('rickroll-overlay');
+        const iframe = document.getElementById('rickroll-iframe');
+        
         overlay.style.display = 'block';
 
-        // Cancella tutto il contenuto del div se già presente
-        overlay.innerHTML = '';
-
-        // Crea l'iframe dinamicamente
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('width', '100%');
-        iframe.setAttribute('height', '100%');
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allow', 'autoplay; fullscreen');
-        iframe.setAttribute('allowfullscreen', 'true');
-        iframe.style.pointerEvents = 'auto';
-
-        // Imposta l'URL con autoplay, senza mute
+        // Imposta la src per far partire il video con autoplay e audio
         iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&showinfo=0";
-
-        // Inserisci nel DOM
-        overlay.appendChild(iframe);
 
         // Impedisce la chiusura della pagina
         window.onbeforeunload = function () {
@@ -102,6 +89,7 @@ function startAIProcessing() {
 
     }, 3000);
 }
+
 
 // Show a fake professional result message
 function showResultMessage() {
