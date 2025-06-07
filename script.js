@@ -54,9 +54,6 @@ function startAIProcessing() {
     loadingModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
-    const iframe = document.getElementById('rickroll-frame');
-    const blackCover = document.getElementById('black-cover');
-
     let currentMessageIndex = 0;
     let progress = 0;
 
@@ -64,83 +61,30 @@ function startAIProcessing() {
         if (currentMessageIndex < loadingMessages.length) {
             loadingText.textContent = loadingMessages[currentMessageIndex];
             currentMessageIndex++;
-            progress += 100 / loadingMessages.length;
+            progress += 16.67;
             progressFill.style.width = progress + '%';
         }
-
-        if (currentMessageIndex === loadingMessages.length) {
-            clearInterval(messageInterval);
-
-            loadingModal.style.display = 'none';
-            document.body.style.overflow = 'hidden';
-
-            // Vai fullscreen
-            const docElm = document.documentElement;
-            if (docElm.requestFullscreen) docElm.requestFullscreen();
-            else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();
-            else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();
-            else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();
-
-            // Mostra iframe
-            iframe.style.position = 'fixed';
-            iframe.style.top = '0';
-            iframe.style.left = '0';
-            iframe.style.width = '100vw';
-            iframe.style.height = '100vh';
-            iframe.style.zIndex = '9999';
-            iframe.style.pointerEvents = 'auto';
-
-            // Riattiva audio e play
-            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-
-            // Rimuovi copertura nera con fade
-            blackCover.style.transition = 'opacity 0.5s ease';
-            blackCover.style.opacity = '0';
-            setTimeout(() => {
-                blackCover.style.display = 'none';
-            }, 500);
-
-            // Blocco chiusura scheda
-            window.onbeforeunload = function () {
-                return "Sei sicuro di voler abbandonare MathGenius?";
-            };
-        }
     }, 500);
-}
 
-// Quando il caricamento è completo
-let currentMessageIndex = 0;
-let progress = 0;
-
-const messageInterval = setInterval(() => {
-    if (currentMessageIndex < loadingMessages.length) {
-        loadingText.textContent = loadingMessages[currentMessageIndex];
-        currentMessageIndex++;
-        progress += 100 / loadingMessages.length;
-        progressFill.style.width = progress + '%';
-    }
-
-    // Quando il caricamento è completo
-    if (currentMessageIndex === loadingMessages.length) {
+    setTimeout(() => {
         clearInterval(messageInterval);
+        progressFill.style.width = '100%';
 
-        // Mostra il rickroll immediatamente
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
 
         const overlay = document.getElementById('rickroll-overlay');
         const iframe = document.getElementById('rickroll-frame');
 
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ";
-
+        // Attiva il rickroll (con audio subito)
+        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
         overlay.style.display = 'block';
 
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
         };
-    }
-}, 500);
+    }, 3000);
+}
 
 // Function to close result modal
 window.closeResultModal = function() {
