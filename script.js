@@ -257,4 +257,4 @@ document.addEventListener('keydown', (e) => {
     } else {
         window.konamiProgress = 0;
     }
-}); 
+});
