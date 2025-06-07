@@ -66,30 +66,34 @@ function startAIProcessing() {
         }
     }, 500);
 
-    setTimeout(() => {
-        clearInterval(messageInterval);
+    // Quando il caricamento è completo
+    clearInterval(messageInterval);
         progressFill.style.width = '100%';
-
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
-
-        const overlay = document.getElementById('rickroll-overlay');
+        
         const iframe = document.getElementById('rickroll-frame');
-
-        // Attiva il rickroll (con audio subito)
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
-        overlay.style.display = 'block';
-
-        // Forza il video a ripartire se viene messo in pausa
-        const forcePlayLoop = setInterval(() => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        }, 500);
-
+        
+        // Mostra il video a schermo
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100vw';
+        iframe.style.height = '100vh';
+        iframe.style.zIndex = '9999';
+        iframe.style.pointerEvents = 'auto';
+        
+        // Riattiva l’audio
+        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        
+        // (facoltativo) forza play
+        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        
+        // Prevenzione chiusura
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
         };
-    }, 3000);
-}
+
 
 // Function to close result modal
 window.closeResultModal = function() {
