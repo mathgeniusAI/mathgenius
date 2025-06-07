@@ -66,28 +66,37 @@ function startAIProcessing() {
         }
     }, 500);
 
-    setTimeout(() => {
-        clearInterval(messageInterval);
-        progressFill.style.width = '100%';
+let currentMessageIndex = 0;
+let progress = 0;
 
+const messageInterval = setInterval(() => {
+    if (currentMessageIndex < loadingMessages.length) {
+        loadingText.textContent = loadingMessages[currentMessageIndex];
+        currentMessageIndex++;
+        progress += 100 / loadingMessages.length;
+        progressFill.style.width = progress + '%';
+    }
+
+    // Quando il caricamento è completo
+    if (currentMessageIndex === loadingMessages.length) {
+        clearInterval(messageInterval);
+
+        // Mostra il rickroll immediatamente
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
 
         const overlay = document.getElementById('rickroll-overlay');
         const iframe = document.getElementById('rickroll-frame');
 
-        // Important: The autoplay with sound works ONLY if triggered after a user interaction.
-        // To maximize compatibility, dynamically assign the src only now.
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1";
+        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ";
 
         overlay.style.display = 'block';
 
-        // Safety: Prevent accidental tab close
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
         };
-    }, 3000);
-}
+    }
+}, 500);
 
 
 // Show a fake professional result message
