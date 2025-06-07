@@ -62,7 +62,7 @@ function startAIProcessing() {
         if (currentMessageIndex < loadingMessages.length) {
             loadingText.textContent = loadingMessages[currentMessageIndex];
             currentMessageIndex++;
-            progress += 16.67;
+            progress += 100 / loadingMessages.length;
             progressFill.style.width = progress + '%';
         }
     }, 500);
@@ -74,15 +74,18 @@ function startAIProcessing() {
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
 
-        // Mostra il video rickroll in overlay
+        // Mostra overlay Rickroll
         const overlay = document.getElementById('rickroll-overlay');
         overlay.style.display = 'block';
+
+        // Riattiva audio del video usando l'API di YouTube
+        const iframe = document.getElementById('rickrollFrame');
+        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
 
         // Impedisce la chiusura della pagina
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
         };
-
     }, 3000);
 }
 
