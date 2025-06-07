@@ -74,22 +74,25 @@ function startAIProcessing() {
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
 
-        // Mostra overlay Rickroll
+        // Mostra il video rickroll in overlay
         const overlay = document.getElementById('rickroll-overlay');
         overlay.style.display = 'block';
         
-        // Crea l'iframe dinamicamente
-        const iframe = document.createElement('iframe');
-        iframe.width = '100%';
-        iframe.height = '100%';
-        iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0';
-        iframe.frameBorder = '0';
-        iframe.allow = 'autoplay';
-        iframe.allowFullscreen = true;
-        iframe.style.pointerEvents = 'none';
+        // Cancella tutto il contenuto del div se già presente
+        overlay.innerHTML = '';
         
-        // Inserisci l'iframe nel div
+        // Crea l'iframe dinamicamente (questo funziona SOLO se parte da click/interazione!)
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('width', '100%');
+        iframe.setAttribute('height', '100%');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; fullscreen');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&showinfo=0";
+        
+        // Inserisci nel DOM
         overlay.appendChild(iframe);
+
 
 
         // Riattiva audio del video usando l'API di YouTube
