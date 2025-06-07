@@ -1,260 +1,256 @@
-// DOM Elements
-const solveButton = document.getElementById('solveButton');
-const ctaButton = document.getElementById('ctaButton');
-const mathInput = document.getElementById('mathInput');
-const loadingModal = document.getElementById('loadingModal');
-const loadingText = document.getElementById('loadingText');
-const progressFill = document.getElementById('progressFill');
-const suggestions = document.querySelectorAll('.suggestion');
-const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+/* MathGenius – script.js
+   ==================================================
+   Tutta la logica front‑end dell’applicazione.
+   Compatibile con tutti i browser moderni.
+*/
 
-// Loading messages for the AI processing simulation
-const loadingMessages = [
-    "Analizzando l'equazione...",
-    "Applicando algoritmi di deep learning...",
-    "Processando simboli matematici...",
-    "Calcolando soluzioni ottimali...",
-    "Generando spiegazione dettagliata...",
-    "Finalizzando risultati..."
-];
+/*
+ * Avviamo il codice solo dopo che il DOM è pronto.
+ * Se includi <script src="script.js" defer></script> subito prima di </body>,
+ * questa precauzione non è strettamente necessaria ma rende il file ri‑usabile
+ * anche se spostato altrove.
+*/
+(() => {
+  'use strict';
 
-// Suggestion click handlers
-suggestions.forEach(suggestion => {
-    suggestion.addEventListener('click', () => {
-        const equation = suggestion.getAttribute('data-equation');
-        mathInput.value = equation;
-        mathInput.focus();
-    });
-});
+  // ────────────────────────────────────────────────────────────
+  //  DOM ELEMENTS
+  // ────────────────────────────────────────────────────────────
+  const qs   = (sel)  => document.querySelector(sel);
+  const qsa  = (sel)  => document.querySelectorAll(sel);
 
-// Mobile menu toggle
-mobileMenuToggle.addEventListener('click', () => {
-    // Simple mobile menu toggle (you can expand this)
-    console.log('Mobile menu clicked');
-});
+  const solveButton      = qs('#solveButton');
+  const ctaButton        = qs('#ctaButton');
+  const mathInput        = qs('#mathInput');
+  const loadingModal     = qs('#loadingModal');
+  const loadingText      = qs('#loadingText');
+  const progressFill     = qs('#progressFill');
+  const mobileMenuToggle = qs('#mobileMenuToggle');
+  const suggestions      = qsa('.suggestion');
+  const rickrollOverlay  = qs('#rickroll-overlay');
+  const rickrollFrame    = qs('#rickroll-frame');
+  const header           = qs('.header');
+  const featureCards     = qsa('.feature-card');
 
-// Solve button click handler
-solveButton.addEventListener('click', () => {
-    startAIProcessing();
-});
+  // ────────────────────────────────────────────────────────────
+  //  LOADING MESSAGES
+  // ────────────────────────────────────────────────────────────
+  const loadingMessages = [
+    "Analizzando l'equazione…",
+    "Applicando algoritmi di deep learning…",
+    "Processando simboli matematici…",
+    "Calcolando soluzioni ottimali…",
+    "Generando spiegazione dettagliata…",
+    "Finalizzando risultati…"
+  ];
 
-// CTA button click handler (this is where the easter egg is hidden)
-ctaButton.addEventListener('click', () => {
-    startAIProcessing();
-});
+  // ────────────────────────────────────────────────────────────
+  //  UTILITIES
+  // ────────────────────────────────────────────────────────────
+  const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
-// Math input enter key handler
-mathInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        startAIProcessing();
-    }
-});
-
-function startAIProcessing() {
+  // ────────────────────────────────────────────────────────────
+  //  AI PROCESSING SIMULATION + RICKROLL EASTER EGG
+  // ────────────────────────────────────────────────────────────
+  function startAIProcessing () {
+    // mostra la modal
     loadingModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
-    let currentMessageIndex = 0;
+    let idx = 0;
     let progress = 0;
 
-    const messageInterval = setInterval(() => {
-        if (currentMessageIndex < loadingMessages.length) {
-            loadingText.textContent = loadingMessages[currentMessageIndex];
-            currentMessageIndex++;
-            progress += 16.67;
-            progressFill.style.width = progress + '%';
-        }
+    const step = 100 / loadingMessages.length;
+
+    const iv = setInterval(() => {
+      if (idx < loadingMessages.length) {
+        loadingText.textContent = loadingMessages[idx++];
+        progress = clamp(progress + step, 0, 100);
+        progressFill.style.width = `${progress}%`;
+      }
     }, 500);
 
-    // Quando il caricamento è completo
+    // finto tempo di calcolo (3 s)
     setTimeout(() => {
-        clearInterval(messageInterval);
-        progressFill.style.width = '100%';
+      clearInterval(iv);
+      progressFill.style.width = '100%';
 
-        loadingModal.style.display = 'none';
-        document.body.style.overflow = 'hidden';
+      // chiude la modal
+      loadingModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
 
-        const overlay = document.getElementById('rickroll-overlay');
-        const iframe = document.getElementById('rickroll-frame');
+      // “Mai darò su…” 🎵
+      rickrollFrame.src =
+        'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ';
+      rickrollOverlay.style.display = 'block';
 
-        // Attiva il rickroll (con audio subito)
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
-        overlay.style.display = 'block';
-
-        window.onbeforeunload = function () {
-            return "Sei sicuro di voler abbandonare MathGenius?";
-        };
+      // chiede conferma se l’utente prova a lasciare la pagina
+      window.onbeforeunload = () => {
+        return 'Sei sicuro di voler abbandonare MathGenius?';
+      };
     }, 3000);
-}
+  }
 
+  // ────────────────────────────────────────────────────────────
+  //  EVENT LISTENERS
+  // ────────────────────────────────────────────────────────────
 
-// Function to close result modal
-window.closeResultModal = function() {
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        if (modal.style.display === 'block') {
-            document.body.removeChild(modal);
-        }
+  // Pulsanti principali
+  solveButton?.addEventListener('click', startAIProcessing);
+  ctaButton  ?.addEventListener('click', startAIProcessing);
+
+  // Enter nella casella di testo
+  mathInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      startAIProcessing();
+    }
+  });
+
+  // Suggerimenti rapidi
+  suggestions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const eq = btn.getAttribute('data-equation');
+      mathInput.value = eq;
+      mathInput.focus();
     });
-}
+  });
 
-// Close modal when clicking outside
-loadingModal.addEventListener('click', (e) => {
+  // Toggle menu mobile (da espandere se necessario)
+  mobileMenuToggle?.addEventListener('click', () => {
+    document.body.classList.toggle('mobile-menu-open');
+  });
+
+  // Chiudi modal facendo clic fuori dal contenuto
+  loadingModal?.addEventListener('click', (e) => {
     if (e.target === loadingModal) {
-        loadingModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+      loadingModal.style.display = 'none';
+      document.body.style.overflow = 'auto';
     }
-});
+  });
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+  // Scroll morbido sui link ancora interni
+  qsa('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      const target = qs(anchor.getAttribute('href'));
+      if (target) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
-});
+  });
 
-// Header scroll effect
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('.header');
+  // Effetto header dopo scroll
+  window.addEventListener('scroll', () => {
+    if (!header) return;
     if (window.scrollY > 100) {
-        header.style.background = 'rgba(255, 255, 255, 0.98)';
-        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+      header.style.background = 'rgba(255, 255, 255, 0.98)';
+      header.style.boxShadow   = '0 2px 20px rgba(0,0,0,.1)';
     } else {
-        header.style.background = 'rgba(255, 255, 255, 0.95)';
-        header.style.boxShadow = 'none';
+      header.style.background = 'rgba(255, 255, 255, 0.95)';
+      header.style.boxShadow   = 'none';
     }
-});
+  });
 
-// Add some interactive effects to feature cards
-document.querySelectorAll('.feature-card').forEach(card => {
+  // Hover/tilt leggero sulle feature card
+  featureCards.forEach(card => {
     card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px) scale(1.02)';
+      card.style.transform = 'translateY(-8px) scale(1.02)';
     });
-    
     card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0) scale(1)';
+      card.style.transform = 'translateY(0) scale(1)';
     });
-});
+  });
 
-// Add floating animation to mathematical symbols
-function createFloatingSymbol() {
+  // ────────────────────────────────────────────────────────────
+  //  ANIMAZIONE SIMBOLI MATEMATICI FLUTTUANTI
+  // ────────────────────────────────────────────────────────────
+  function createFloatingSymbol () {
     const symbols = ['∫', '∑', '∂', 'π', '∞', '√', 'α', 'β', 'γ', 'δ', 'θ', 'λ'];
-    const symbol = document.createElement('div');
-    symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    symbol.style.cssText = 
-        position: fixed;
-        font-size: 2rem;
-        color: rgba(102, 126, 234, 0.1);
-        pointer-events: none;
-        z-index: -1;
-        left: ${Math.random() * 100}vw;
-        top: 100vh;
-        animation: floatUp 8s linear forwards;
-    ;
-    
-    document.body.appendChild(symbol);
-    
-    setTimeout(() => {
-        if (document.body.contains(symbol)) {
-            document.body.removeChild(symbol);
-        }
-    }, 8000);
-}
+    const el = document.createElement('div');
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.cssText = `
+      position: fixed;
+      font-size: 2rem;
+      color: rgba(102,126,234,.1);
+      pointer-events: none;
+      z-index: -1;
+      left: ${Math.random() * 100}vw;
+      top: 100vh;
+      animation: floatUp 8s linear forwards;
+    `;
 
-// Add CSS for floating animation
-const style = document.createElement('style');
-style.textContent = 
-    @keyframes floatUp {
-        to {
-            transform: translateY(-120vh) rotate(360deg);
-            opacity: 0;
-        }
-    }
-;
-document.head.appendChild(style);
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 8000);
+  }
 
-// Create floating symbols periodically
-setInterval(createFloatingSymbol, 3000);
+  // Aggiungiamo il @keyframes floatUp al volo (una sola volta)
+  (() => {
+    const style = document.createElement('style');
+    style.textContent = `@keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }`;
+    document.head.appendChild(style);
+  })();
 
-// Add some console easter eggs for developers
-console.log(
-🧮 MathGenius Developer Console
-===============================
-Hai trovato la console! Ecco alcuni comandi segreti:
+  // Fa apparire un simbolo ogni 3 s
+  setInterval(createFloatingSymbol, 3000);
 
-- mathgenius.solve("x^2 + 1 = 0") // Risolve equazioni immaginarie
-- mathgenius.rickroll() // Indovina cosa fa...
-- mathgenius.credits() // Mostra i crediti
+  // ────────────────────────────────────────────────────────────
+  //  DEVELOPER CONSOLE EASTER EGGS
+  // ────────────────────────────────────────────────────────────
+  console.log(`\n🧮 MathGenius Developer Console\n===============================\nHai trovato la console! Ecco alcuni comandi segreti:\n\n- mathgenius.solve("x^2 + 1 = 0") // Risolve equazioni immaginarie\n- mathgenius.rickroll()           // Indovina cosa fa…\n- mathgenius.credits()            // Mostra i crediti\n\nDivertiti a sperimentare! 🚀\n`);
 
-Divertiti esplorando! 🚀
-);
-
-// Add developer console commands
-window.mathgenius = {
+  window.mathgenius = {
     solve: (equation) => {
-        console.log(🤖 Risolvendo: ${equation});
-        console.log(📊 Risultato: La risposta è sempre 42 (secondo Douglas Adams));
-        return "42";
+      console.log(`🤖 Risolvendo: ${equation}`);
+      console.log('📊 Risultato: la risposta è sempre 42 (secondo Douglas Adams)');
+      return 42;
     },
-    
     rickroll: () => {
-        console.log("🎵 Never gonna give you up, never gonna let you down... 🎵");
-        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
+      console.log('🎵 Never gonna give you up, never gonna let you down… 🎵');
+      window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
     },
-    
     credits: () => {
-        console.log(
-🏆 MathGenius Credits
-====================
-Sviluppato con ❤️ per dimostrare le potenzialità dell'AI
-Design ispirato a: OpenAI, DeepMind, Wolfram Alpha
-Easter egg: Rick Astley approved ✅
-        );
+      console.log(`\n🏆 MathGenius Credits\n====================\nSviluppato con ❤️ per dimostrare le potenzialità dell'AI\nDesign ispirato a: OpenAI, DeepMind, Wolfram Alpha\nEaster egg: Rick Astley approved ✅\n`);
     }
-};
+  };
 
-// Add some performance monitoring
-let pageLoadTime = performance.now();
-window.addEventListener('load', () => {
-    pageLoadTime = performance.now() - pageLoadTime;
-    console.log(⚡ Pagina caricata in ${pageLoadTime.toFixed(2)}ms);
-});
+  // ────────────────────────────────────────────────────────────
+  //  PERFORMANCE MONITORING
+  // ────────────────────────────────────────────────────────────
+  let navigationStart = performance.now();
+  window.addEventListener('load', () => {
+    const loadTime = performance.now() - navigationStart;
+    console.log(`⚡ Pagina caricata in ${loadTime.toFixed(2)} ms`);
+  });
 
-// Add keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + Enter to solve
+  // ────────────────────────────────────────────────────────────
+  //  KEYBOARD SHORTCUTS + KONAMI CODE
+  // ────────────────────────────────────────────────────────────
+  const konamiCode = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'
+  ];
+  let konamiProgress = 0;
+
+  document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd+Enter → risolvi
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        startAIProcessing();
+      e.preventDefault();
+      startAIProcessing();
+      return;
     }
-    
-    // Konami code easter egg (↑↑↓↓←→←→BA)
-    const konamiCode = [
-        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-        'KeyB', 'KeyA'
-    ];
-    
-    if (!window.konamiProgress) window.konamiProgress = 0;
-    
-    if (e.code === konamiCode[window.konamiProgress]) {
-        window.konamiProgress++;
-        if (window.konamiProgress === konamiCode.length) {
-            console.log("🎮 Konami Code attivato! Modalità sviluppatore sbloccata!");
-            document.body.style.filter = 'hue-rotate(180deg)';
-            setTimeout(() => {
-                document.body.style.filter = 'none';
-            }, 3000);
-            window.konamiProgress = 0;
-        }
+
+    // Konami code
+    if (e.code === konamiCode[konamiProgress]) {
+      konamiProgress++;
+      if (konamiProgress === konamiCode.length) {
+        console.log('🎮 Konami Code attivato! Modalità sviluppatore sbloccata!');
+        document.body.style.filter = 'hue-rotate(180deg)';
+        setTimeout(() => (document.body.style.filter = 'none'), 3000);
+        konamiProgress = 0;
+      }
     } else {
-        window.konamiProgress = 0;
+      konamiProgress = 0;
     }
-});
+  });
+})();
