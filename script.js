@@ -66,38 +66,33 @@ function startAIProcessing() {
         }
     }, 500);
 
-let currentMessageIndex = 0;
-let progress = 0;
+// Quando il caricamento è completo
+clearInterval(messageInterval);
+progressFill.style.width = '100%';
+loadingModal.style.display = 'none';
+document.body.style.overflow = 'hidden';
 
-const messageInterval = setInterval(() => {
-    if (currentMessageIndex < loadingMessages.length) {
-        loadingText.textContent = loadingMessages[currentMessageIndex];
-        currentMessageIndex++;
-        progress += 100 / loadingMessages.length;
-        progressFill.style.width = progress + '%';
-    }
+const iframe = document.getElementById('rickroll-frame');
 
-    // Quando il caricamento è completo
-    if (currentMessageIndex === loadingMessages.length) {
-        clearInterval(messageInterval);
+// Mostra il video a schermo
+iframe.style.position = 'fixed';
+iframe.style.top = '0';
+iframe.style.left = '0';
+iframe.style.width = '100vw';
+iframe.style.height = '100vh';
+iframe.style.zIndex = '9999';
+iframe.style.pointerEvents = 'auto';
 
-        // Mostra il rickroll immediatamente
-        loadingModal.style.display = 'none';
-        document.body.style.overflow = 'hidden';
+// Riattiva l’audio
+iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
 
-        const overlay = document.getElementById('rickroll-overlay');
-        const iframe = document.getElementById('rickroll-frame');
+// (facoltativo) forza play
+iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
 
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ";
-
-        overlay.style.display = 'block';
-
-        window.onbeforeunload = function () {
-            return "Sei sicuro di voler abbandonare MathGenius?";
-        };
-    }
-}, 500);
-
+// Prevenzione chiusura
+window.onbeforeunload = function () {
+    return "Sei sicuro di voler abbandonare MathGenius?";
+};
 
 // Show a fake professional result message
 function showResultMessage() {
