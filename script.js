@@ -79,18 +79,7 @@ function startAIProcessing() {
 
         // Attiva il rickroll (con audio subito)
         iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
-        overlay.style.display = 'block';
-
-        const forcePlayInterval = setInterval(() => {
-        iframe.contentWindow.postMessage(
-            JSON.stringify({
-                event: "command",
-                func: "playVideo",
-                args: []
-            }),
-            "*"
-        );
-    }, 500);
+        iframe.style.pointerEvents = 'none'; // Impedisce click sull'iframe (facoltativo)
 
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
