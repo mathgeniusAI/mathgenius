@@ -80,6 +80,11 @@ function startAIProcessing() {
         iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
         overlay.style.display = 'block';
 
+        // Forza il video a ripartire se viene messo in pausa
+        const forcePlayLoop = setInterval(() => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        }, 500);
+
         window.onbeforeunload = function () {
             return "Sei sicuro di voler abbandonare MathGenius?";
         };
