@@ -65,8 +65,7 @@ function startAIProcessing() {
             progressFill.style.width = progress + '%';
         }
     }, 500);
-
-    // Quando il caricamento è completo
+    
     // Quando il caricamento è completo
     setTimeout(() => {
         clearInterval(messageInterval);
@@ -86,8 +85,6 @@ function startAIProcessing() {
         return "Sei sicuro di voler abbandonare MathGenius?";
     };
 }, 3000);
-
-
 
 // Function to close result modal
 window.closeResultModal = function() {
