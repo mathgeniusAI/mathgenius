@@ -80,7 +80,7 @@ function startAIProcessing() {
         overlay.style.display = 'block';
 
         // Imposta la src per far partire il video con autoplay e audio
-        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&showinfo=0";
+        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1";
 
         // Impedisce la chiusura della pagina
         window.onbeforeunload = function () {
