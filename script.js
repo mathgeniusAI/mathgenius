@@ -66,6 +66,7 @@ function startAIProcessing() {
         }
     }, 500);
 
+    // Quando il caricamento è completo
     setTimeout(() => {
         clearInterval(messageInterval);
         progressFill.style.width = '100%';
@@ -85,6 +86,7 @@ function startAIProcessing() {
         };
     }, 3000);
 }
+
 
 // Function to close result modal
 window.closeResultModal = function() {
@@ -146,7 +148,7 @@ function createFloatingSymbol() {
     const symbols = ['∫', '∑', '∂', 'π', '∞', '√', 'α', 'β', 'γ', 'δ', 'θ', 'λ'];
     const symbol = document.createElement('div');
     symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    symbol.style.cssText = 
+    symbol.style.cssText = `
         position: fixed;
         font-size: 2rem;
         color: rgba(102, 126, 234, 0.1);
@@ -155,7 +157,7 @@ function createFloatingSymbol() {
         left: ${Math.random() * 100}vw;
         top: 100vh;
         animation: floatUp 8s linear forwards;
-    ;
+    `;
     
     document.body.appendChild(symbol);
     
@@ -168,21 +170,21 @@ function createFloatingSymbol() {
 
 // Add CSS for floating animation
 const style = document.createElement('style');
-style.textContent = 
+style.textContent = `
     @keyframes floatUp {
         to {
             transform: translateY(-120vh) rotate(360deg);
             opacity: 0;
         }
     }
-;
+`;
 document.head.appendChild(style);
 
 // Create floating symbols periodically
 setInterval(createFloatingSymbol, 3000);
 
 // Add some console easter eggs for developers
-console.log(
+console.log(`
 🧮 MathGenius Developer Console
 ===============================
 Hai trovato la console! Ecco alcuni comandi segreti:
@@ -192,13 +194,13 @@ Hai trovato la console! Ecco alcuni comandi segreti:
 - mathgenius.credits() // Mostra i crediti
 
 Divertiti esplorando! 🚀
-);
+`);
 
 // Add developer console commands
 window.mathgenius = {
     solve: (equation) => {
-        console.log(🤖 Risolvendo: ${equation});
-        console.log(📊 Risultato: La risposta è sempre 42 (secondo Douglas Adams));
+        console.log(`🤖 Risolvendo: ${equation}`);
+        console.log(`📊 Risultato: La risposta è sempre 42 (secondo Douglas Adams)`);
         return "42";
     },
     
@@ -208,13 +210,13 @@ window.mathgenius = {
     },
     
     credits: () => {
-        console.log(
+        console.log(`
 🏆 MathGenius Credits
 ====================
 Sviluppato con ❤️ per dimostrare le potenzialità dell'AI
 Design ispirato a: OpenAI, DeepMind, Wolfram Alpha
 Easter egg: Rick Astley approved ✅
-        );
+        `);
     }
 };
 
@@ -222,7 +224,7 @@ Easter egg: Rick Astley approved ✅
 let pageLoadTime = performance.now();
 window.addEventListener('load', () => {
     pageLoadTime = performance.now() - pageLoadTime;
-    console.log(⚡ Pagina caricata in ${pageLoadTime.toFixed(2)}ms);
+    console.log(`⚡ Pagina caricata in ${pageLoadTime.toFixed(2)}ms`);
 });
 
 // Add keyboard shortcuts
@@ -255,4 +257,4 @@ document.addEventListener('keydown', (e) => {
     } else {
         window.konamiProgress = 0;
     }
-}); 
+});
