@@ -1,16 +1,13 @@
 /* MathGenius – script.js
    ==================================================
    Logica front‑end dell’applicazione.
-   Compatibile con tutti i browser moderni.
+   Aggiunta modalità Full‑Screen (API Fullscreen) al rickroll.
 */
 
 (() => {
   'use strict';
 
-  /*
-   * Inizializziamo TUTTO solo dopo che l’albero DOM è stato costruito;
-   * così lo script può essere caricato ovunque (head o body) con o senza «defer».
-  */
+  // Assicuriamoci che l’intero DOM sia pronto prima di procedere
   document.addEventListener('DOMContentLoaded', init);
 
   // ────────────────────────────────────────────────────────────
@@ -21,7 +18,7 @@
     const qs  = (sel) => document.querySelector(sel);
     const qsa = (sel) => document.querySelectorAll(sel);
 
-    // DOM ELEMENTS -------------------------------------------------------------
+    // DOM --------------------------------------------------------------------
     const solveButton      = qs('#solveButton');
     const ctaButton        = qs('#ctaButton');
     const mathInput        = qs('#mathInput');
@@ -35,11 +32,12 @@
     const header           = qs('.header');
     const featureCards     = qsa('.feature-card');
 
+    // Se #solveButton non esiste, avviso in console
     if (!solveButton) {
       console.warn('[MathGenius] elemento #solveButton non trovato – controlla l’HTML.');
     }
 
-    // MESSAGGI DI CARICAMENTO --------------------------------------------------
+    // Messaggi di caricamento fake ------------------------------------------
     const loadingMessages = [
       "Analizzando l'equazione…",
       "Applicando algoritmi di deep learning…",
@@ -49,8 +47,22 @@
       "Finalizzando risultati…"
     ];
 
-    // AI PROCESSING + RICKROLL -------------------------------------------------
+    // ────────────────────────────────────────────────────────────
+    //  FULLSCREEN UTILS
+    // ────────────────────────────────────────────────────────────
+    function enterFullscreen (elem = document.documentElement) {
+      if (document.fullscreenElement) return; // già in fullscreen
+      const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+      if (req) {
+        try { req.call(elem); } catch (err) { /* silenzioso */ }
+      }
+    }
+
+    // ────────────────────────────────────────────────────────────
+    //  AI PROCESSING + RICKROLL
+    // ────────────────────────────────────────────────────────────
     function startAIProcessing () {
+      // mostro la modal di caricamento
       loadingModal.style.display = 'block';
       document.body.style.overflow = 'hidden';
 
@@ -73,15 +85,19 @@
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'auto';
 
+        // Rickroll overlay + video autoplay
         rickrollFrame.src =
           'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ';
         rickrollOverlay.style.display = 'block';
+
+        // Prova ad andare in Full‑Screen
+        enterFullscreen(rickrollOverlay);
 
         window.onbeforeunload = () => 'Sei sicuro di voler abbandonare MathGenius?';
       }, 3000);
     }
 
-    // EVENT LISTENERS ----------------------------------------------------------
+    // Event Listeners --------------------------------------------------------
     solveButton?.addEventListener('click', startAIProcessing);
     ctaButton  ?.addEventListener('click', startAIProcessing);
 
@@ -141,7 +157,7 @@
       });
     });
 
-    // ANIMAZIONE SIMBOLI MATEMATICI -------------------------------------------
+    // Animazione simboli matematici ------------------------------------------
     function createFloatingSymbol () {
       const symbols = ['∫','∑','∂','π','∞','√','α','β','γ','δ','θ','λ'];
       const el = document.createElement('div');
@@ -159,6 +175,7 @@
       setTimeout(() => el.remove(), 8000);
     }
 
+    // Inseriamo @keyframes per l’animazione
     (() => {
       const style = document.createElement('style');
       style.textContent = `@keyframes floatUp { to { transform: translateY(-120vh) rotate(360deg); opacity: 0; } }`;
@@ -167,8 +184,8 @@
 
     setInterval(createFloatingSymbol, 3000);
 
-    // DEVELOPER CONSOLE EASTER EGGS -------------------------------------------
-    console.log(`\n🧮 MathGenius Developer Console\n===============================\nHai trovato la console! Ecco alcuni comandi segreti:\n- mathgenius.solve("x^2 + 1 = 0")\n- mathgenius.rickroll()\n- mathgenius.credits()\nBuon divertimento! 🚀`);
+    // Developer console easter eggs -----------------------------------------
+    console.log(`\n🧮 MathGenius Developer Console\n===============================\nComandi segreti:\n- mathgenius.solve('x^2 + 1 = 0')\n- mathgenius.rickroll()\n- mathgenius.credits()\nBuon divertimento! 🚀`);
 
     window.mathgenius = {
       solve: (equation) => {
@@ -185,14 +202,14 @@
       }
     };
 
-    // PERFORMANCE LOG ----------------------------------------------------------
+    // Performance log --------------------------------------------------------
     const navStart = performance.now();
     window.addEventListener('load', () => {
       const loadTime = (performance.now() - navStart).toFixed(2);
       console.log(`⚡ Pagina caricata in ${loadTime} ms`);
     });
 
-    // SHORTCUTS + KONAMI -------------------------------------------------------
+    // Shortcuts + Konami -----------------------------------------------------
     const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
     let konamiPos = 0;
 
