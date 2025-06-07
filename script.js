@@ -52,40 +52,37 @@ mathInput.addEventListener('keypress', (e) => {
 
 // Main AI processing function with easter egg
 function startAIProcessing() {
-    // Show loading modal
     loadingModal.style.display = 'block';
     document.body.style.overflow = 'hidden';
-    
+
     let currentMessageIndex = 0;
     let progress = 0;
-    
-    // Update loading messages and progress
+
     const messageInterval = setInterval(() => {
         if (currentMessageIndex < loadingMessages.length) {
             loadingText.textContent = loadingMessages[currentMessageIndex];
             currentMessageIndex++;
-            progress += 16.67; // 100 / 6 messages
+            progress += 16.67;
             progressFill.style.width = progress + '%';
         }
     }, 500);
-    
-    // After 3 seconds, trigger the easter egg
+
     setTimeout(() => {
         clearInterval(messageInterval);
         progressFill.style.width = '100%';
-        
-        // Hide loading modal
+
         loadingModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        
-        // Easter egg: Rickroll redirect
-        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank');
-        
-        // Show a "professional" message after the rickroll
-        setTimeout(() => {
-            showResultMessage();
-        }, 1000);
-        
+        document.body.style.overflow = 'hidden';
+
+        // Mostra il video rickroll in overlay
+        const overlay = document.getElementById('rickroll-overlay');
+        overlay.style.display = 'block';
+
+        // Impedisce la chiusura della pagina
+        window.onbeforeunload = function () {
+            return "Sei sicuro di voler abbandonare MathGenius?";
+        };
+
     }, 3000);
 }
 
