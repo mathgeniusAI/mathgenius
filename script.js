@@ -67,74 +67,37 @@ function startAIProcessing() {
     }, 500);
 
 // Quando il caricamento è completo
-clearInterval(messageInterval);
-progressFill.style.width = '100%';
-loadingModal.style.display = 'none';
-document.body.style.overflow = 'hidden';
+let currentMessageIndex = 0;
+let progress = 0;
 
-const iframe = document.getElementById('rickroll-frame');
+const messageInterval = setInterval(() => {
+    if (currentMessageIndex < loadingMessages.length) {
+        loadingText.textContent = loadingMessages[currentMessageIndex];
+        currentMessageIndex++;
+        progress += 100 / loadingMessages.length;
+        progressFill.style.width = progress + '%';
+    }
 
-// Mostra il video a schermo
-iframe.style.position = 'fixed';
-iframe.style.top = '0';
-iframe.style.left = '0';
-iframe.style.width = '100vw';
-iframe.style.height = '100vh';
-iframe.style.zIndex = '9999';
-iframe.style.pointerEvents = 'auto';
+    // Quando il caricamento è completo
+    if (currentMessageIndex === loadingMessages.length) {
+        clearInterval(messageInterval);
 
-// Riattiva l’audio
-iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        // Mostra il rickroll immediatamente
+        loadingModal.style.display = 'none';
+        document.body.style.overflow = 'hidden';
 
-// (facoltativo) forza play
-iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        const overlay = document.getElementById('rickroll-overlay');
+        const iframe = document.getElementById('rickroll-frame');
 
-// Prevenzione chiusura
-window.onbeforeunload = function () {
-    return "Sei sicuro di voler abbandonare MathGenius?";
-};
+        iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&loop=1&playlist=dQw4w9WgXcQ";
 
-// Show a fake professional result message
-function showResultMessage() {
-    const resultModal = document.createElement('div');
-    resultModal.className = 'modal';
-    resultModal.style.display = 'block';
-    
-    resultModal.innerHTML = `
-        <div class="modal-content">
-            <div class="ai-processing">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
-                <h3>Congratulazioni!</h3>
-                <p>Hai appena scoperto il nostro easter egg nascosto!</p>
-                <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                    MathGenius è ancora in fase di sviluppo, ma speriamo che ti sia piaciuto 
-                    questo piccolo scherzo. Torna presto per la versione completa!
-                </p>
-                <button onclick="closeResultModal()" style="
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    margin-top: 1.5rem;
-                ">
-                    Chiudi
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(resultModal);
-    
-    // Auto close after 10 seconds
-    setTimeout(() => {
-        if (document.body.contains(resultModal)) {
-            document.body.removeChild(resultModal);
-        }
-    }, 10000);
-}
+        overlay.style.display = 'block';
+
+        window.onbeforeunload = function () {
+            return "Sei sicuro di voler abbandonare MathGenius?";
+        };
+    }
+}, 500);
 
 // Function to close result modal
 window.closeResultModal = function() {
