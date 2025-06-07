@@ -77,6 +77,20 @@ function startAIProcessing() {
         // Mostra overlay Rickroll
         const overlay = document.getElementById('rickroll-overlay');
         overlay.style.display = 'block';
+        
+        // Crea l'iframe dinamicamente
+        const iframe = document.createElement('iframe');
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0';
+        iframe.frameBorder = '0';
+        iframe.allow = 'autoplay';
+        iframe.allowFullscreen = true;
+        iframe.style.pointerEvents = 'none';
+        
+        // Inserisci l'iframe nel div
+        overlay.appendChild(iframe);
+
 
         // Riattiva audio del video usando l'API di YouTube
         const iframe = document.getElementById('rickrollFrame');
