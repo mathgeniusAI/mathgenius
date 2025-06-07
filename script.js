@@ -67,25 +67,41 @@ function startAIProcessing() {
     }, 500);
 
     // Quando il caricamento è completo
+    // Quando il caricamento è completo
     setTimeout(() => {
         clearInterval(messageInterval);
         progressFill.style.width = '100%';
-
+        
         loadingModal.style.display = 'none';
         document.body.style.overflow = 'hidden';
-
+        
         const overlay = document.getElementById('rickroll-overlay');
         const iframe = document.getElementById('rickroll-frame');
-
+        
         // Attiva il rickroll (con audio subito)
         iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=1&loop=1&playlist=dQw4w9WgXcQ";
-        iframe.style.pointerEvents = 'none'; // Impedisce click sull'iframe (facoltativo)
+        overlay.style.display = 'block';
+        
+        // Impedisce click sull'iframe (facoltativo)
+        iframe.style.pointerEvents = 'none';
+        
+        // Forza il video a ripartire se l'utente prova a metterlo in pausa
+        const forcePlayInterval = setInterval(() => {
+            iframe.contentWindow.postMessage(
+                JSON.stringify({
+                    event: "command",
+                    func: "playVideo",
+                    args: []
+                }),
+                "*"
+            );
+        }, 500);
 
-        window.onbeforeunload = function () {
-            return "Sei sicuro di voler abbandonare MathGenius?";
-        };
-    }, 3000);
-}
+    window.onbeforeunload = function () {
+        return "Sei sicuro di voler abbandonare MathGenius?";
+    };
+}, 3000);
+
 
 
 // Function to close result modal
